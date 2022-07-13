@@ -47,6 +47,15 @@
 {%- set default_installer = '--installer ' ~ letsencrypt.installers['default']
                             if letsencrypt.installers['default'] is defined else '' %}
 
+letsencrypt-renewal-hook-fullchain-privkey:
+  file.managed:
+    - name: {{ letsencrypt.config_dir.path }}/renewal-hooks/deploy/gen-fullchain-privkey.sh
+    - user: {{ letsencrypt.config_dir.user }}
+    - group: {{ letsencrypt.config_dir.group }}
+    - dir_mode: {{ letsencrypt.config_dir.mode }}
+    - mode: 755
+    - source: salt://letsencrypt/files/gen-fullchain-privkey.sh
+
 {% for setname, domainlist in letsencrypt.domainsets.items() %}
 
   # Set an authenticator and a installer for the domainset or use defaults set above
